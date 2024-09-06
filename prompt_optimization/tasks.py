@@ -1,6 +1,7 @@
 import requests
 import json
 import concurrent.futures
+import toml
 from abc import ABC, abstractmethod
 from typing import List, Dict, Callable
 from tqdm import tqdm
@@ -80,7 +81,7 @@ class EthosBinaryTask(BinaryClassificationTask):
         exs = df.reset_index().to_dict('records')
         exs = [{'id': x['index'], 'text': x[0], 'label': 1 if x[1] > 0.4 else 0} for x in exs[200:]]
         return exs
-    
+
     def get_test_examples(self):
         df = pd.read_csv(self.data_dir + '/ethos_ishate_binary_shuf.csv', sep=';', header=None)
         df = df[(df[1] <= 0) | (df[1] >= 0.7)]
@@ -100,7 +101,7 @@ class JailbreakBinaryTask(BinaryClassificationTask):
             text = ' '.join([x['text'].strip() for x in json.loads(convo) if x['role'] == 'user'])
             exs.append({'id': i, 'text': text, 'label': label})
         return exs
-    
+
     def get_test_examples(self):
         exs = []
         for i, l in enumerate(open(self.data_dir + '/test.tsv')):
@@ -120,10 +121,33 @@ class DefaultHFBinaryTask(BinaryClassificationTask):
             row = json.loads(row.strip())
             exs.append({'id': f'train-{i}', 'label': row['label'], 'text': row['text']})
         return exs
-    
+
     def get_test_examples(self):
         exs = []
         for i, row in enumerate(open(self.data_dir + '/test.jsonl')):
             row = json.loads(row.strip())
             exs.append({'id': f'test-{i}', 'label': row['label'], 'text': row['text']})
         return exs
+
+
+class PostgresQuestionTask(ClassificationTask):
+    categories = ['0', '1', '2', '3', '4']
+
+    def get_train_examples(self):
+        exs = []
+        with open(self.data_dir + '/train.toml', 'r', encoding='utf-8') as f:
+            loaded = toml.loads(f.read())
+        for i, row in enumerate(loaded['questions']):
+            exs.append({'id': f'train-{i}', 'label': row['answer'], 'text': row['question']})
+        return exs
+
+    def get_test_examples(self):
+        exs = []
+        with open(self.data_dir + '/test.toml', 'r', encoding='utf-8') as f:
+            loaded = toml.loads(f.read())
+        for i, row in enumerate(loaded['questions']):
+            exs.append({'id': f'test-{i}', 'label': row['answer'], 'text': row['question']})
+        return exs
+
+    def stringify_prediction(self, pred):
+        return self.categories[pred]

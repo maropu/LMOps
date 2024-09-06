@@ -8,19 +8,14 @@ import json
 import argparse
 import scorers
 import tasks
+import utils
 import predictors
 import optimizers
 
 
 def get_task_class(task_name):
-    if task_name == 'ethos':
-        return tasks.EthosBinaryTask
-    elif task_name == 'jailbreak':
-        return tasks.JailbreakBinaryTask
-    elif task_name == 'liar':
-        return tasks.DefaultHFBinaryTask
-    elif task_name == 'ar_sarcasm':
-        return tasks.DefaultHFBinaryTask
+    if task_name == 'postgres':
+        return tasks.PostgresQuestionTask
     else:
         raise Exception(f'Unsupported task: {task_name}')
 
@@ -50,13 +45,13 @@ def get_scorer(scorer):
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--task', default='ethos')
-    parser.add_argument('--data_dir', default='data/ethos')
-    parser.add_argument('--prompts', default='prompts/ethos.md')
+    parser.add_argument('--task', default='postgres')
+    parser.add_argument('--data_dir', default='data/postgres')
+    parser.add_argument('--prompts', default='prompts/postgres_qa_prompt.txt')
     # parser.add_argument('--config', default='default.json')
     parser.add_argument('--out', default='test_out.txt')
-    parser.add_argument('--max_threads', default=32, type=int)
-    parser.add_argument('--temperature', default=0.0, type=float)
+    parser.add_argument('--max_threads', default=4, type=int)
+    parser.add_argument('--temperature', default=0.7, type=float)
 
     parser.add_argument('--optimizer', default='nl-gradient')
     parser.add_argument('--rounds', default=6, type=int)
@@ -82,25 +77,25 @@ def get_args():
     parser.add_argument('--c', default=1.0, type=float, help='exploration param for UCB. higher = more exploration')
     parser.add_argument('--knn_k', default=2, type=int)
     parser.add_argument('--knn_t', default=0.993, type=float)
-    parser.add_argument('--reject_on_errors', action='store_true') 
-    
+    parser.add_argument('--reject_on_errors', action='store_true')
+
     args = parser.parse_args()
 
     return args
 
 
 if __name__ == '__main__':
+    utils.chatgpt_healthcheck()
+
     args = get_args()
-
     config = vars(args)
-
     config['eval_budget'] = config['samples_per_eval'] * config['eval_rounds'] * config['eval_prompts_per_round']
-    
+
     task = get_task_class(args.task)(args.data_dir, args.max_threads)
     scorer = get_scorer(args.scorer)()
     evaluator = get_evaluator(args.evaluator)(config)
     bf_eval = get_evaluator('bf')(config)
-    gpt4 = predictors.BinaryPredictor(config)
+    gpt4 = predictors.PostgresQuestionPredictor(config)
 
     optimizer = optimizers.ProTeGi(
         config, evaluator, scorer, args.max_threads, bf_eval)
@@ -111,12 +106,10 @@ if __name__ == '__main__':
     if os.path.exists(args.out):
         os.remove(args.out)
 
-    print(config)
-
     with open(args.out, 'a') as outf:
         outf.write(json.dumps(config) + '\n')
 
-    candidates = [open(fp.strip()).read() for fp in args.prompts.split(',')]
+    candidates = [open(fp.strip(), encoding='utf-8').read() for fp in args.prompts.split(',')]
 
     for round in tqdm(range(config['rounds'] + 1)):
         print("STARTING ROUND ", round)
@@ -132,19 +125,20 @@ if __name__ == '__main__':
 
         # select candidates
         candidates = candidates[:config['beam_size']]
+        escaped_candidates = [utils.escape_string(c) for c in candidates]
         scores = scores[:config['beam_size']]
 
         # record candidates, estimated scores, and true scores
         with open(args.out, 'a') as outf:
             outf.write(f"======== ROUND {round}\n")
-            outf.write(f'{time.time() - start}\n')
-            outf.write(f'{candidates}\n')
-            outf.write(f'{scores}\n')
+            outf.write(f"Elapsed Time: {time.time() - start}s\n")
+            outf.write(f"Top-{config['beam_size']} candidates: {escaped_candidates}\n")
+            outf.write(f"Train Scores(minibatch_size={config['minibatch_size']}): {scores}\n")
         metrics = []
         for candidate, score in zip(candidates, scores):
             f1, texts, labels, preds = task.evaluate(gpt4, candidate, test_exs, n=args.n_test_exs)
             metrics.append(f1)
-        with open(args.out, 'a') as outf:  
-            outf.write(f'{metrics}\n')
+        with open(args.out, 'a') as outf:
+            outf.write(f'Test Scores:{metrics}\n')
 
     print("DONE!")

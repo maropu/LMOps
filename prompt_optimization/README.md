@@ -9,7 +9,7 @@ The main entrypoint is `main.py`
 
 # Quickstart:
 ```
-time python main.py --task ethos --prompts prompts/ethos.md --data_dir data/ethos --out expt7_datasets/treatment.ucb.ethos.out --evaluator ucb
+LOGGING_ENABLED=1 OPENAI_API_KEY='YOUR API KEY' OPENAI_MODEL_NAME='gpt-4o-mini' python main.py --task postgres --prompts prompts/empty.txt --data_dir data/postgres_questions --out output.txt --evaluator ucb --minibatch_size 16 --rounds 6 --beam_size 4 --max_threads 4 --temperature 1.0 --n_gradients 4
 ```
 
 This will run an experiment with UCB bandits for candidate selection. The program will print configuration settings and provide progress updates with each optimization round. The results, including candidate prompts and their associated scores, will be written to the specified output file.

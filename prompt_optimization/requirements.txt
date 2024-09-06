@@ -1,0 +1,7 @@
+# Python 3.11+ required
+python-liquid==1.12.1
+scikit-learn==1.5.1
+pandas==2.2.2
+requests==2.32.3
+tqdm==4.66.4
+toml==0.10.2

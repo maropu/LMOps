@@ -1,0 +1,860 @@
+[[questions]]
+question = """PostgreSQL開発コミュニティについて、正しいものは次のうちどれか？
+[1] コミュニティは招待制度となっており、既に参画しているメンバーから招待を受ける必要がある
+[2] コミュニティの議論はメーリングリストを中心に行われている
+[3] コミュニティではバイナリを配布しており、ソースコードはダウンロードできない
+[4] コミュニティの運営主体は「日本PostgreSQLユーザ会」である"""
+answer = 2
+
+[[questions]]
+question = """
+テーブル t_user から複数行を選択する 正しいSQL は次のうちどれか？
+postgres=# select * from t_user ;
+ id |      name      | age | department
+----+----------------+-----+-------------
+  1 | Taro Yamada    |  30 | Engineering
+  2 | Hanako Suzuki  |  25 | Marketing
+  3 | Kenta Sato     |  28 | Sales
+  4 | Yuki Tanaka    |  35 | HR
+  5 | Rina Kobayashi |  22 | Finance
+  6 | Shota Watanabe |  29 | Engineering
+  7 | Mai Ito        |  31 | Marketing
+  8 | Koji Nakamura  |  26 | Sales
+(8 rows)
+
+[1] SELECT * FROM t_user WHERE name ~ 'a';
+[1] SELECT * FROM t_user WHERE name ~ 'e$';
+[1] SELECT * FROM t_user WHERE department ~ '^HR$';
+[1] SELECT * FROM t_user WHERE name ~ '^M';
+[1] SELECT * FROM t_user WHERE id::text ~ '^9$';"""
+answer = 1
+
+[[questions]]
+question = """ロジカルレプリケーションの説明として、正しいものは次のうちどれか？
+[1] Windows と Linux の PostgreSQL 間でのレプリケーションは不可能である
+[2] 異なるメジャーバージョン間のレプリケーションが可能である
+[3] サブスクライバー側のDBサーバは参照のみ可能であり、更新はできない
+[4] 既にストリーミングレプリケーションを実行しているプライマリに対して、パブリッシャーは設定できない"""
+answer = 2
+
+[[questions]]
+question = """インデックスの説明として、正しいものは次のうちどれか？
+[1] インデックスを使ったテーブルへのアクセスはシーケンシャルアクセスとなる
+[2] PostgreSQLで使用できるインデックスの種類は B-Tree インデックスのみである
+[3] 複数列を対象にしたインデックスを作成することができる
+[4] テーブルを削除する際は削除するテーブルを対象にしたインデックスを削除しておく必要がある"""
+answer = 3
+
+[[questions]]
+question = """「CREATE TABLE tbl (id integer, age integer, name text)」を実行しテーブルを作成した数件のデータを挿入した後、下記のSQLを実行した際にエラーが出力された
+postgres=# SELECT * FROM tbl GROUP BY id;
+ERROR:  column "tbl.age" must appear in the GROUP BY clause or be used in an aggregate function
+
+エラーが解消されるように修正された SQL は次のうちどれか？
+[1] SELECT id FROM tbl GROUP BY name;
+[2] SELECT age FROM tbl GROUP BY id;
+[3] SELECT id, age FROM tbl GROUP BY id;
+[4] SELECT max(id) FROM tbl GROUP BY id;"""
+answer = 4
+
+[[questions]]
+question = """crypt関数の意味として、正しいものは次のうちどれか？
+[1] 対称鍵を指定して、データを暗号化する
+[2] データのバイナリハッシュを計算する
+[3] パスワードのハッシュ処理を行う
+[4] データのハッシュ化MACを計算する"""
+answer = 3
+
+[[questions]]
+question = """「mydb」テーブルのみに対して、更新/削除された行の切り詰めを行いたい、VACUUMコマンドの使い方として正しいものは次のうちどれか？
+[1] VACUUM mydb;
+[2] VACUUM FULL mydb;
+[3] VACUUM VERBOSE mydb;
+[4] VACUUM -f mydb;"""
+answer = 2
+
+[[questions]]
+question = """下記のEXPLAINの実行結果について、正しいものは次の打ちどれか？
+postgres=# EXPLAIN SELECT relname,nspname FROM pg_class left join pg_namespace ON (pg_class.relnamespace = pg_namespace.oid);
+
+                               QUERY PLAN
+-------------------------------------------------------------------------
+
+Hash Left Join  (cost=1.14..15.97 rows=288 width=128)
+   Hash Cond: (pg_class.relnamespace = pg_namespace.oid)
+   ->  Seq Scan on pg_class  (cost=0.00..10.88 rows=288 width=68)
+   ->  Hash  (cost=1.06..1.06 rows=6 width=68)
+         ->  Seq Scan on pg_namespace  (cost=0.00..1.06 rows=6 width=68)
+(5 行)
+
+[1] このEXPLAINコマンドを実行すると、引数に指定したSQL文が実際に実行される
+[2] 「cost=〜」の部分は、処理にかかる実際の時間を示している
+[3] 計画ノードの「Hash Left Join」、「Seq Scan on pg_class」、「Seq Scan on pg_namespace」の記述は、プランナが自動選択した最適なデータ処理のアルゴリズムを示している
+[4] 「width=〜」の部分は、実際の1行あたりの平均のバイトサイズを示している"""
+answer = 3
+
+[[questions]]
+question = """pg_stat_statementsの説明として正しいものは次のうちどれか？
+[1] SQL文の実行に指定した時間以上かかった場合、それぞれのSQL文の実行に要した時間を記録する
+[2] ロック待ちとなっているトランザクションや対象のテーブルを確認する
+[3] 実行された全てのSQL文の実行時の統計情報を記録する
+[4] データベースあたり1行の形式でデータベース全体の情報を表示する
+"""
+answer = 3
+
+[[questions]]
+question = """pg_classに関する記述の中で、正しいものは次の打ちどれか？
+[1] relpages列にはテーブル内の行数が格納されている
+[2] pg_classはテーブルの情報のみを格納している
+[3] pg_class内には常に最新の情報が格納されている
+[4] pg_classに格納されている統計情報は一部のDDLコマンドで更新される"""
+answer = 4
+
+[[questions]]
+question = """テーブルへのアクセスの統計情報を表示する方法として、正しいSQL文を次のうちどれか？
+[1] SELECT * FROM pg_stat_activity;
+[2] SELECT * FROM pg_stat_database;
+[3] SELECT * FROM pg_stat_bgwriter;
+[4] SELECT * FROM pg_stat_all_tables;"""
+answer = 4
+
+[[questions]]
+question = """pg_locksビューによって確認することが可能なロックの対象となるオブジェクトは次のうちどれか？
+[1] カラム
+[2] リレーション
+[3] データベース
+[4] ブロック"""
+answer = 1
+
+[[questions]]
+question = """EXPLAINコマンドで指定可能な出力形式のうち誤っているものは次のうちどれか？
+[1] JSON
+[2] CSV
+[3] YAML
+[4] XML"""
+answer = 2
+
+[[questions]]
+question = """EXPLAINコマンドを使用することで、問い合わせ文の実行計画を表示することができる、EXPLAINコマンドの対象となるSQLコマンドとして正しいものは次のうちどれか？
+[1] DELETE
+[2] DROP TABLE
+[3] PREPARE
+[4] EXECUTE"""
+answer = 4
+
+[[questions]]
+question = """標準統計情報ビューに関して正しいものを全て選択しなさい。
+[1] pg_stat_all_tablesから、TOASTテーブルから読み取られたディスクブロック数を取得することができる。
+[2] pg_stat_activityから、現在の問い合わせの予想実行完了時刻を取得することができる。
+[3] pg_stat_databaseから、対象データベースのエラー発生数を取得することができる。
+[4] pg_statio_all_tablesから、対象テーブルのバッファヒット数を取得することができる。"""
+answer = 4
+
+[[questions]]
+question = """pg_stat_databaseに関する記述で正しいものは次のうちどれか？
+[1] データベースクラスタ全体の稼働統計情報が1行だけ格納される。
+[2] blks_hitはバッファキャッシュにヒットしたブロック数が格納される。
+[3] blks_readはディスクから読み込んだブロック数とバッファキャッシュから読み込んだブロック数の合計である。
+[4] デフォルトではtrack_countsパラメータがoffであるため、稼働統計情報が収集されない。"""
+answer = 2
+
+[[questions]]
+question = """ロングトランザクションを発見するのに有効なシステムカタログについての解説で、適切なものは次のうちどれか？
+[1] pg_stat_activityのwaitingを監視する
+[2] pg_stat_activityのquery_startを監視する
+[3] pg_stat_activityのxact_startを監視する
+[4] ロングトランザクションを発見するのに有効なシステムカタログは無い"""
+answer = 3
+
+[[questions]]
+question = """oid2nameの使い方として誤っているものは次のうちどれか？
+[1] データベースのOID一覧を取得するため以下のコマンドを実行した
+　$ oid2name
+[2] 別ホストsrv上の5432ポートで動作するPostgreSQLのデータベースのOID一覧を取得するため以下のコマンドを実行した
+　$ oid2name -h srv -p 5432
+[3] データベースtestdbに含まれるテーブルのファイルノード番号一覧を取得するため以下のコマンドを実行した
+　$ oid2name -d testdb
+[4] テーブル空間のOID一覧を取得するため以下のコマンドを実行した
+　$ oid2name -s"""
+answer = 2
+
+[[questions]]
+question = """テーブル/カラム統計情報に関する記述の中で、正しいものは次のうちどれか？
+[1] pg_classには、常に最新の情報が格納されている。
+[2] pg_class内の列であるreltuplesにはテーブル内の行数が格納されるが、この値は推測値である。
+[3] pg_statsは、カラム統計情報を扱うテーブルである。
+[4] pg_statsで参照できる情報の中には実データの一部が格納されるため、一般のユーザは参照できない。"""
+answer = 2
+
+[[questions]]
+question = """pg_stat_database, pg_stat_all_tables などのアクセス統計情報(稼働統計情報)のビューに関する説明として、適切なものは次のうちどれか？
+[1] stats collector プロセスによって定期的にデータが収集される。
+[2] ANALYZE コマンドを実行したときにデータが収集される。
+[3] テーブルの行数、最大値・最小値、データの分布など、テーブル内のデータの状態が収集される。
+[4] プランナが SQL の最適な実行計画を作成するために利用される。"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLサーバをレプリケーション構成で稼働させる場合、synchronous_commit パラメータによってプライマリ機とスタンバイ機の同期レベルをチューニングすることが可能である、以下の選択肢はプライマリ機でトランザクションのコミットを実行した際の、synchronous_commit パラメータの設定値毎の動作の説明をしたものである、誤っているものは次のうちどれか？
+[1] on にすると、WALがスタンバイ機のディスクに正常に書き出されたタイミングでコミット成功とする
+[2] off にすると、WALがプライマリ機にもスタンバイ機にもまだ書き出されていない状況でもコミット成功とする
+[3] remote_apply にすると、スタンバイ機でのWALのディスク書き込みだけでなく、WALの記述内容がデータベースに適用されたタイミングでコミット成功とする
+[4] local にすると、WALがスタンバイ機のディスクに書き出される前の、バッファに書き出されたタイミングでコミット成功とする"""
+answer = 4
+
+[[questions]]
+question = """buffers_backendに関する説明として適切なものは次のうちどれか？
+[1] pg_io_bgwriterビューによって表示される
+[2] チェックポイントによる書き出しの際に値が増加する
+[3] buffers_backendの値がbuffers_allocに対して大きい場合は、shared_buffersの値のチューニングを検討する必要がある
+[4] バックグラウンドライタによる書き出しの際に値が増加する"""
+answer = 3
+
+[[questions]]
+question = """問い合わせ計画に関する以下の内容のうち、正しいものは次のうちどれか？
+[1] enable_seqscanを無効に設定すると、シーケンシャルスキャンは完全に行われなくなる。
+[2] random_page_costをseq_page_costと比較して小さく設定すると、よりインデックススキャンが使用されるようになる。
+[3] random_page_costをseq_page_costと比較して大きく設定すると、よりインデックススキャンが使用されるようになる。
+[4] default_statistics_targetをより小さく設定すると、より細かく統計情報を収集するようになるため、プランナの予測の品質が向上する。"""
+answer = 2
+
+[[questions]]
+question = """work_memをチューニングすることによって、性能が向上すると考えられる処理は次のうちどれか？
+[1] ORDER BY
+[2] CREATE INDEX
+[3] VACUUM
+[4] 自動VACUUM"""
+answer = 1
+
+[[questions]]
+question = """インデックスの作成に関する説明として、適切なものは次のうちどれか？
+[1] FILLFACTORの指定が省略された場合、デフォルト値として対象テーブルのFILLFACTORと同じ値が設定される
+[2] UNLOGGEDパラメータが指定された場合、インデックスの更新時にWALログが取られなくなり、更新処理が高速化する
+[3] PARALLELパラメータが指定された場合、複数のプロセスによりインデックスが作成され、作成時間が短縮する
+[4] CONCURRENTLYパラメータが指定された場合、対象テーブルに対する書き込みをロックせずにインデックスを作成するが、通常の方式より作成時間が長くなる"""
+answer = 4
+
+[[questions]]
+question = """GUCパラメータのenable_seqscanをonからoffに変更する前後で、同一のクエリに対してEXPLAIN ANALYZE文で実行計画を取得する、実行計画の変化の説明として、最も適切ではないものを１つ選びなさい、この時、enable_seqscan以外の条件はすべて同一とする。
+[1] Total runtimeの値が大きくなる可能性がある
+[1] Total runtimeの値が小さくなる可能性がある
+[1] 最上位ノードの全体推定コストが大きくなる可能性がある
+[1] 最上位ノードの全体推定コストが小さくなる可能性がある"""
+answer = 4
+
+[[questions]]
+question = """インデックスの再作成について正しい記述は次のうちどれか？
+[1] インデックスの再作成はサービスを停止して行う必要がある。
+[2] REINDEXはインデックスの元となるテーブルの読み込みをロックしないため、サービス稼働中に実行しても参照処理への影響はない。
+[3] CREATE INDEX CONCURRENTLYは、同時挿入、更新、削除と競合するロックを獲得せずにインデックスを作成できる。
+[4] CREATE INDEX CONCURRENTLYでは、プライマリキーの作成も可能である。"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLの処理全般が定期的に遅くなる現象が発生した、この場合のチューニングで効果が期待できる対策は次のうちどれか？
+[1] 遅くなったSQLを見直し、負荷の原因となっている記述を修正する。
+[2] checkpoint_completion_targetを調整して、チェックポイントの負荷分散を図る。
+[3] ストリーミングレプリケーション構成に変更し負荷分散を図る。
+[4] PostgreSQLの特性であり対策はない。"""
+answer = 2
+
+[[questions]]
+question = """full_page_writesパラメータをOFFに設定した場合に関する説明として、適切でないものは次のうちどれか？
+[1] データ更新時の応答性能が向上する可能性がある
+[2] データ更新時のWALの書き込み量が低減する可能性がある
+[3] wal_levelパラメータがminimalの場合は、応答性能は変化しない
+[4] システムクラッシュ時に、回復不可能なデータ破損が発生する可能性がある"""
+answer = 3
+
+[[questions]]
+question = """性能低下の原因に関して正しいものは次のうちどれか？
+[1] shared_buffersの値を小さく設定したことによって、チェックポイント中の問い合わせの性能が低下した。
+[2] maintenance_work_memをwork_memよりも大きく設定したことによって、VACUUM処理の性能が低下した。
+[3] 複数のセッションが多量のINSERTを発行したことによって、WALファイルへの書き込みで競合が発生し、INSERTの性能が低下した。
+[4] pgstattupleを用いて定期的にタプルレベルの統計情報を取得しなかったため、PostgreSQLが最適な実行計画を作成できずに問い合わせの性能が低下した。"""
+answer = 3
+
+[[questions]]
+question = """デッドロックに関する GUC パラメータ deadlock_timeout の説明として、正しいものは次のうちどれか？
+[1] deadlock_timeout で指定された時間を経過してもロックが獲得できなければ、デッドロックが発生していると判断される。
+[2] deadlock_timeout の値を調整することで、デッドロックの発生を回避できる。
+[3] deadlock_timeout の値を小さくすると、ロック待ちのプロセスが減るので、結果的にCPU負荷を小さくすることができると考えられる。
+[4] デッドロックはアプリケーションの作り方を工夫することで回避すべきであり、deadlock_timeout の値はなるべく大きくすることが望ましい。"""
+answer = 4
+
+[[questions]]
+question = """GUCパラメータの説明として、誤っているものを1つ選びなさい。
+[1] shared_bufferは、PostgreSQLサーバが使用する共有メモリバッファのサイズ を設定する。
+[2] max_connectionsは、PostgresSQLサーバに接続できる最大クライアント数を 設定する。
+[3] work_memは、VACUUM、CREATE INDEXなどの保守作業で使用されるメモリの最 大容量を設定する。
+[4] sslをonに設定することでSSL接続を有効にする。"""
+answer = 3
+
+[[questions]]
+question = """共有メモリが不足して、サーバがダウンしてしまった時の対策として正しいものは次のうちどれか？
+[1] maintenance_work_memで適切なメモリ領域を設定する
+[2] shared_buffersで適切なメモリ領域を設定する
+[3] autovacuum_work_memで適切なメモリ領域を設定する
+[4] pg_resetwalを用いてWALファイルを整合性のある状態に復旧し、PostgreSQLを起動する"""
+answer = 2
+
+[[questions]]
+question = """以下のサーバログに関する説明として、適切なものを1つ選びなさい。
+LOG: server process (PID 21334) was terminated by signal 11: Segmentation fault
+DETAIL: Failed process was running: SELECT user_func();
+
+[1] プロセスに対してpg_cancel_backend関数が発行された
+[2] プロセスに対してpg_terminate_backend関数が発行された
+[3] OOM KillerによりSIGKILLが発生した
+[4] user_funcユーザ定義関数によりSIGSEGVが発生した"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLへの接続に関して、スーパーユーザでPostgreSQLに接続した際、以下のメッセージが出力された。
+FATAL: sorry, too many clients already
+このエラーメッセージが出力される原因として適切なものを1つ選びなさい。
+[1] 同時接続数がmax_connectionsに設定した値を超えた。
+[2] 同時接続数がsuperuser_reserved_connectionsに設定した値を超えた。
+[3] 同時接続数がdb_connectionsに設定した値を超えた。
+[4] 同時接続数が（max_connections - superuser_reserved_connections）の値を超えた。"""
+answer = 1
+
+[[questions]]
+question = """あるユーザテーブルの参照時に、以下のエラーメッセージが出力された。
+「ERROR: invalid page header in block 0 of relation base/16408/16421」
+この時の対処として最も適切なものを1つ選びなさい。
+[1] データベース全体に対してVACUUMを実行する
+[2] 該当のテーブルファイルを削除し、PostgreSQLを再起動する
+[3] zero_damaged_pages を on に設定して再度テーブルを参照する
+[4] 該当のシステムテーブルに対してCLUSTERを実行する"""
+answer = 3
+
+[[questions]]
+question = """システムカタログのインデックスに関する説明として、適切ではないものを1つ選びなさい。
+[1] システムカタログのインデックスが破損している場合、サーバプロセスが起動時に強制終了する可能性がある。
+[2] システムカタログの読み込み時にシステムインデックスを無視するにはGUCパラメータのignore_system_indexesを利用する。
+[3] インデックスの破損範囲が不明な場合に、データベースの全てのシステムインデックスを再構成するためのSQLコマンドはREINDEX SYSTEMである。
+[4] 共有システムカタログのいずれかのインデックスが破損した可能性がある場合は、必ずスタンドアロンサーバを使用して修復しなければいけない。"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLの歴史において、最初のリリースは何年に行われたか。以下の選択肢の中から正しいものを選んでください。
+[1] 1986年
+[2] 1996年
+[3] 2001年
+[4] 2010年"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLがJSONデータ型のサポートを最初に導入したバージョンはどれか？
+[1] 9.2
+[2] 9.3
+[3] 9.4
+[4] 10.0"""
+answer = 2
+
+[[questions]]
+question = """特定のカラムをテーブルから削除するSQL文として、正しいものは次のうちどれか？
+[1] ALTER TABLE my_table DROP COLUMN my_column;
+[2] DELETE COLUMN my_column FROM my_table;
+[3] REMOVE my_column FROM my_table;
+[4] DROP COLUMN my_table.my_column;"""
+answer = 1
+
+[[questions]]
+question = """JSONBデータ型において、特定のキーを持つオブジェクトを効率的に検索するために使用する演算子は次のうちどれか？
+[1] @>
+[2] ->
+[3] ->>
+[4] ="""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおいて、CTE（共通テーブル式）を使用することで得られる利点として正しいものは次のうちどれか？
+[1] ウィンドウ関数を使用できる
+[2] 再帰的なクエリを作成できる
+[3] より高速なインデックス検索が可能になる
+[4] マテリアライズドビューを自動的に作成する"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLにおいて、JSON型のデータを効率的に検索するために使用されるインデックスの種類は次のうちどれか？
+[1] B-Treeインデックス
+[2] GINインデックス
+[3] HASHインデックス
+[4] GiSTインデックス"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLの演算子に関する記述の中で、正しいものは次のうちどれか？
+[1] `||`演算子は、2つの文字列を連結するために使用される
+[2] `&&`演算子は、数値のビット演算にのみ使用される
+[3] `<>`演算子は、等しい場合に真を返す
+[4] `IN`演算子は、指定したリストの全ての要素を対象に比較を行う"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLの関数に関する記述の中で、正しいものは次のうちどれか？
+[1] `ARRAY_AGG()`関数は、指定した列の値を配列に集約するための関数である
+[2] `COALESCE()`関数は、全ての引数がNULLの場合のみNULLを返す
+[3] `TO_TIMESTAMP()`関数は、文字列をUNIXタイムスタンプに変換するために使用される
+[4] `REGEXP_MATCHES()`関数は、正規表現にマッチする全ての部分文字列を返す"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおける同時実行制御の方法として、以下の説明の中から正しいものを1つ選びなさい。
+[1] Serializable分離レベルでは、トランザクションは他のトランザクションによる読み込みを完全にブロックする。
+[2] Read Committed分離レベルでは、トランザクションが他のトランザクションによって変更されたデータを読み込むことができる。
+[3] Repeatable Read分離レベルでは、トランザクション内で同じクエリが複数回実行されても、常に同じ結果が得られる。
+[4] Read Uncommitted分離レベルでは、未コミットの変更データを他のトランザクションが読み込むことができる。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLにおけるMVCC（Multi-Version Concurrency Control）の特性に関して、次の説明のうち最も適切ではないものを1つ選びなさい。
+[1] MVCCはトランザクションがデータの整合性を保ちながら同時に実行できることを可能にする。
+[2] MVCCでは、トランザクションの開始時点でのデータのスナップショットを保持するため、読み取り時にロックが必要ない。
+[3] MVCCによって、古いバージョンの行はトランザクションが終了するまで削除されない。
+[4] MVCCの実装により、全てのトランザクションが同じバージョンのデータを参照することが保証される。"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLにおけるパフォーマンスチューニングにおいて、インデックスの選択に影響を与える設定項目は次のうちどれか？
+[1] enable_seqscan
+[2] work_mem
+[3] maintenance_work_mem
+[4] effective_cache_size"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLのバックアップと復元に関する以下の内容のうち、正しいものは次のうちどれか？
+[1] pg_dumpコマンドは、データベース全体をバイナリファイルとして保存する。
+[2] pg_basebackupは、オンラインでのフルバックアップを取得するためのコマンドである。
+[3] pg_restoreは、pg_dumpで生成したテキストファイル形式のバックアップのみを復元できる。
+[4] WAL（Write Ahead Log）は、バックアップを取得する際に不要なデータである。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLのパフォーマンス最適化に関する以下の説明のうち、正しくないものを1つ選びなさい。
+[1] ビューは、インデックスを持たないため、ビューを使用したクエリは常にパフォーマンスが低下する。
+[2] テーブルのパーティショニングを利用することで、大規模データに対するクエリの効率が向上する。
+[3] WAL（Write Ahead Logging）は、クラッシュリカバリを提供するが、ログのサイズが大きくなるとパフォーマンスが影響を受ける可能性がある。
+[4] クエリリライトを行うことで、より効率的な実行計画を得られる場合がある。"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおいて、トランザクションの隔離レベルを設定することで得られる利点として正しいものはどれか？
+[1] すべてのトランザクションを同時実行できるようにする。
+[2] 読み取りの整合性を保ちながら、トランザクション間の影響を最小限に抑える。
+[3] デッドロックを完全に防ぐ効果がある。
+[4] トランザクションの実行速度を必ず向上させる。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLにおけるJIT（Just-In-Time）コンパイルの仕組みとそのパフォーマンスへの影響に関して、以下のうち正しいものはどれか？
+[1] JITコンパイラは、全てのプランノードに一律に適用されるため、特定のノードにおいてはJIT効果が薄れる可能性がある。
+[2] JITは、クエリの経過時間を短縮することが主目的であり、スループットを向上させることは二次的な目的である。
+[3] JITは、実行計画が生成される際の選択肢として含まれるため、JITが最適化されることで、全体のクエリ実行時間が短縮されるとは限らない。
+[4] JITコンパイルは、特にCPUバウンドな処理に効果的であり、I/O待ちが発生するクエリに対しては効果が薄い。"""
+answer = 4
+
+[[questions]]
+question = """libpqに関する次の記述の中で、正しいものはどれか？
+[1] libpqは、PostgreSQLのサーバー間でデータを直接転送するためのライブラリである。
+[2] libpqを使用することで、非同期通信を行うことができる。
+[3] libpqは、SQL文の最適化を自動で行う機能を持っている。
+[4] libpqは、PostgreSQLと直接接続できるリモートマシンの設定を管理するためのツールである。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLのlibpqを使用して、接続文字列内でSSLを有効にするためのオプションに関する説明がある。以下の接続文字列中で、正しいものとして最も適切なのはどれか。
+[1] dbname=mydb user=myuser password=mysecret host=localhost port=5432 sslmode=require
+[2] database=mydb username=myuser pass=mysecret host=localhost ssl=true port=5432
+[3] dbname=mydb user=myuser password=mysecret host=localhost port=5432 ssl=true
+[4] dbname=mydb user=myuser password=mysecret host=localhost port=5432 sslmode=enabled"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおいて、特定のスキーマ内に存在する全てのインデックスの情報を取得するために使用されるシステムカタログのビューはどれか？
+[1] pg_catalog.pg_index
+[2] information_schema.indexes
+[3] pg_catalog.pg_indexes
+[4] pg_catalog.pg_class"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLのシステムカタログに関する説明として、正しいものは次のうちどれか？
+[1] pg_catalogスキーマは、ユーザーが定義したテーブルを格納するためのスキーマである。
+[2] pg_table_defは、データベース内のすべてのテーブルの構造を表示するためのシステムビューである。
+[3] pg_stat_activityは、現在進行中のセッションに関する情報を提供するシステムビューである。
+[4] pg_constraintは、データベースのバックアップを管理するためのシステムカタログである。"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLのシステムカタログから、特定のスキーマ内のすべてのテーブルの名前とそのオーナーを取得するために必要なクエリの正しい形式は次のうちどれか？
+[1] SELECT * FROM pg_tables WHERE tableowner = 'user';
+[2] SELECT name, owner FROM pg_class WHERE relkind = 'r';
+[3] SELECT table_name, table_owner FROM information_schema.tables WHERE table_schema = 'schema_name';
+[4] SELECT tablename, tableowner FROM pg_tables WHERE schemaname = 'public';"""
+answer = 4
+
+[[questions]]
+question = """次のPostgreSQLにおけるWAL（Write Ahead Logging）の管理に関する説明のうち、正しいものはどれか？
+[1] WALは、ログが一定のサイズに達すると自動的にローテーションされるが、ユーザーによる手動の制御はできない。
+[2] WALは、レプリケーションの実装にも利用されており、ストリーミングレプリケーションにおいて重要な役割を果たしている。
+[3] WALは、トランザクションがコミットされる前にデータをディスクに書き込むことを保証する。
+[4] WALの圧縮は標準機能として提供されておらず、ユーザーは手動でログを圧縮しなければならない。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLのWAL (Write Ahead Logging) におけるチェックポイントの役割は何か？
+[1] データが常に最新の状態でデータベースに反映されることを保証する
+[2] WALログとデータファイルの同期を取ることでデータの復旧を容易にする
+[3] トランザクションの同時実行制御を管理し、デッドロックを防止する
+[4] データベースのパフォーマンスを最適化するためにクエリプランを調整する"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLの全文検索で使用されるテキスト検索用データ型は次のうちどれか？
+[1] varchar
+[2] text
+[3] tsvector
+[4] jsonb"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLの全文検索において、特定の単語が文書内に含まれるかを確認するために使用される演算子は次のうちどれか？
+[1] @@
+[2] &&
+[3] ||
+[4] !"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLの全文検索機能に関する以下の説明のうち、誤っているものは次のうちどれか？
+[1] `tsvector`型は、単語の出現頻度や重みを持たせた形でテキストを表現するデータ型である。
+[2] `tsquery`型は、複雑な論理演算を用いて検索条件を作成するために利用される。
+[3] `GIN`インデックスは、`tsvector`型のデータに対して特に効率的な検索を提供するために使われる。
+[4] `text`型のカラムに対して直接全文検索を行う場合、必ず`tsvector`型へ変換する必要がある。"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLをLinuxにインストールした後、デフォルトのデータベースクラスターのアクセス権限を管理するために必要な設定ファイルはどれか？
+[1] postgresql.conf
+[2] pg_hba.conf
+[3] pg_ident.conf
+[4] recovery.conf"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLのインストール方法に関する次の記述のうち、誤っているものはどれか？
+[1] PostgreSQLのインストールには、必要なライブラリや依存関係を事前にインストールしておく必要があることが多い
+[2] インストール後にデータベースのユーザーや権限を設定しないと、データベースの操作ができないことがある
+[3] PostgreSQLはすでにインストールされている場合、別のバージョンを同時にインストールすることができない
+[4] Windows環境ではPostgreSQLのインストーラーを使って簡単にインストールすることができる"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLにおいて、デフォルトの文字列照合を変更するためのパラメータの中で、特定の文字列の順序や検索結果に影響を与えるものは次のうちどれか？
+[1] lc_ctype
+[2] lc_collate
+[3] lc_verification
+[4] lc_check"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLのローカライゼーション設定に関して、正しいものは次のうちどれか？
+[1] ローカライゼーションはデータベースのユーザーごとに異なる設定が可能である
+[2] ユーザーがログインした時のロケール設定は、デフォルトのデータベース設定を上書きする
+[3] 文字列の照合順序は、データベース全体に一度設定すると変更できない
+[4] ローカライゼーションの設定は、データベースのテーブル単位でのみ適用可能である"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおけるローカライゼーション設定の扱いについて、正しいものは次のうちどれか？
+[1] データベースのロケールを変更すると、既存のテーブルの照合順序にも自動的に影響を与える。
+[2] データベースを作成する際に指定したロケールは、すべてのスキーマに対してデフォルトの設定として適用される。
+[3] 照合順序を変更することで、同一テーブル内の異なるカラムに異なる照合順序を設定することができる。
+[4] PostgreSQLでは、サポートされている言語のロケール設定に対して、ユーザー定義のロケールを追加することはできない。"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLにおいて、ANALYZE操作を実行する目的として最も適切なものを1つ選びなさい。
+[1] テーブル内の行数を削減し、ストレージを効率化するため。
+[2] クエリプランナーが最適な実行計画を生成するために、統計情報を更新する。
+[3] データベースのトランザクションの整合性を保つために、ロックを解除する。
+[4] 不要なインデックスを削除し、ディスクスペースを節約するため。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLのMVCC（Multiversion Concurrency Control）について、以下の状況を考える。トランザクションAとトランザクションBが同じテーブルに対して操作を行っている。このとき、トランザクションAが行ったUPDATE文がコミットされる前に、トランザクションBが同じ行に対してSELECT文を実行した場合、トランザクションBが取得するデータはどのようになるか正しいものを1つ選びなさい。
+[1] トランザクションAのUPDATE前の旧データを取得する。
+[2] トランザクションAのUPDATE後の新データを取得する。
+[3] トランザクションAのUPDATEがコミットされるまで、データを取得できない。
+[4] トランザクションAのUPDATEをロールバックした場合、トランザクションBは新データを取得する。"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおけるワークメモリ（work_mem）に関する説明として適切なものは次のうちどれか？
+[1] work_memは、各トランザクションごとに指定され、トランザクションが終了するとそのメモリは解放される
+[2] work_memは、クエリの実行中に利用されるメモリ量を制御し、複数のクエリで共有される
+[3] work_memの設定値が低すぎると、ソートやハッシュジョインがディスク上で行われる可能性が高くなる
+[4] work_memは、デフォルトでは8MBに設定されており、テーブルのサイズに応じて自動的に調整される"""
+answer = 3
+
+[[questions]]
+question = """次のクエリの中で、テーブル t_sales から sales_date 列の値が2023年1月1日以降のレコードのみを取得する正しいSQLはどれか？
+postgres=# SELECT * FROM t_sales;
+ sales_id | product_name | amount | sales_date
+----------+--------------+--------+------------
+        1 | Widget A     | 1000   | 2023-01-01
+        2 | Widget B     | 1500   | 2023-01-02
+        3 | Widget C     | 2000   | 2023-01-03
+(3 rows)
+
+[1] SELECT * FROM t_sales WHERE sales_date >= '2023-01-01';
+[2] SELECT * FROM t_sales WHERE sales_date > '2023-01-01';
+[3] SELECT * FROM t_sales WHERE sales_date >= '2023-01-02';
+[4] SELECT sales_date FROM t_sales WHERE sales_date >= '2023-01-01';"""
+answer = 1
+
+[[questions]]
+question = """次のクエリの中で、テーブル t_sales から product_name 列が \"""Widget A\""" または \"""Widget B\""" のレコードのみを取得し、sales_date 列が2023年1月1日以降かつ2023年1月3日以前のレコードを選択する正しいSQLはどれか？
+postgres=# SELECT * FROM t_sales;
+ sales_id | product_name | amount | sales_date
+----------+--------------+--------+------------
+        1 | Widget A     | 1000   | 2023-01-01
+        2 | Widget B     | 1500   | 2023-01-02
+        3 | Widget C     | 2000   | 2023-01-03
+        4 | Widget D     | 2500   | 2023-01-04
+(4 rows)
+
+[1] SELECT * FROM t_sales WHERE (product_name = 'Widget A' OR product_name = 'Widget B') AND (sales_date >= '2023-01-01' AND sales_date <= '2023-01-03');
+[2] SELECT * FROM t_sales WHERE (product_name IN ('Widget A', 'Widget B')) AND (sales_date >= '2023-01-01' AND sales_date < '2023-01-03');
+[3] SELECT * FROM t_sales WHERE (product_name = 'Widget A' AND sales_date >= '2023-01-01') OR (product_name = 'Widget B' AND sales_date <= '2023-01-03');
+[4] SELECT * FROM t_sales WHERE (product_name = 'Widget A' OR product_name = 'Widget B') AND (sales_date > '2023-01-01' AND sales_date <= '2023-01-03');"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLでJSONデータの特定のキーにアクセスするために使用する演算子として正しいものは次のうちどれか？
+[1] .>
+[2] @>
+[3] ->
+[4] []"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLにおいて、特定のJSONBデータ型に対して、指定したキーの値を抽出するために使用される組み込み関数として正しいものは次のうちどれか？
+[1] jsonb_extract_path()
+[2] jsonb_set()
+[3] jsonb_build_object()
+[4] jsonb_array_elements()"""
+answer = 1
+
+[[questions]]
+question = """次のSQL関数に関する記述のうち、正しいものは次のうちどれか？
+[1] LENGTH()関数は、引数として渡された文字列のバイト数を返す。
+[2] COALESCE()関数は、すべての引数がNULLの場合にNULLを返す。
+[3] EXTRACT()関数は、日付や時間から特定のフィールドを抽出する際に、常にUTCで返す。
+[4] NOW()関数は、クエリの実行時点のタイムスタンプを返す。"""
+answer = 4
+
+[[questions]]
+question = """次のSQL関数に関する記述のうち、正しいものは次のうちどれか？
+[1] ARRAY_AGG()関数は、指定した列の値を配列として集約する際にNULL値を無視する。
+[2] STRING_AGG()関数は、引数に指定した区切り文字を使用して文字列を結合し、NULL値を含む場合も全ての値を結合する。
+[3] TO_CHAR()関数は、数値や日付を指定したフォーマットに変換し、常に文字列として返す。
+[4] SUM()関数は、引数に渡された数値がすべてNULLの場合、NULLではなく0を返す。"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLにおけるビューとルールシステムに関する次の記述の中で、正しいものはどれか？
+[1] ビューを作成する際に、すべての列に対してNOT NULL制約が必要である。
+[2] 更新可能なビューでは、基になるテーブルの行に対してINSERT、UPDATE、DELETEを行うことができるが、これにはルールやトリガーが必要な場合がある。
+[3] ルールシステムは、ビューのクエリを最適化するために使用されるが、実行計画には影響を与えない。
+[4] ビューはインデックスを持つことができるため、パフォーマンスの向上が期待できる。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLでユーザー定義関数 (UDF) を作成する際、関数の戻り値を指定するためには何を使用する必要があるか？最も適切なものを1つ選びなさい。
+[1] RETURNS句
+[2] RETURN句
+[3] OUTPUT句
+[4] RESULT句"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおいて、ユーザー定義関数 (UDF) を作成する際に、関数の引数にデフォルト値を設定する場合、どのような構文を用いるべきか？最も適切なものを1つ選びなさい。
+[1] 引数名 DEFAULT 値
+[2] 引数名 := 値
+[3] 引数名 = 値
+[4] 引数名 WITH DEFAULT 値"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおけるユーザー定義関数（UDF）に関して、次の説明のうち正しいものはどれか？
+[1] ユーザー定義関数の実行環境は、実行時に動的に変更することができる
+[2] ユーザー定義関数は、トランザクションブロック内であれば、ROLLBACKやCOMMITを伴うことができる
+[3] ユーザー定義関数は、デフォルトでは安全性が保証されないため、SECURITY DEFINERオプションを使わない限り、権限が呼び出し元のユーザーのものに制限される
+[4] ユーザー定義関数を定義する際に、RETURN TYPEを指定しなくても自動的に型が推論されるため、必ずしも指定する必要はない"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLのユーザー定義関数 (UDF) において、複数のOUTパラメータを持つ関数を定義する場合、次の記述のうち正しいものはどれか？
+[1] OUTパラメータは関数の戻り値として使われるため、必ず1つだけ定義できる
+[2] OUTパラメータにはデフォルト値を設定することができるが、呼び出し時に省略することはできない
+[3] OUTパラメータは関数内で最後に設定した値が戻り値として使用されるため、順番に値を設定することができる
+[4] OUTパラメータが複数ある場合、すべてのOUTパラメータに対して順次値を設定する必要がなく、任意の順序で設定できる"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLにおけるロールと権限に関する以下の記述のうち、正しいものはどれか？
+[1] データベース内のすべてのロールには、デフォルトで全てのスキーマに対するUSAGE権限が付与される。
+[2] CREATE ROLEコマンドでロールを作成する際に、同時にそのロールに対してDBA権限を付与することはできない。
+[3] セッション中に一時的な権限を変更するには、SET ROLEコマンドを使用することができる。
+[4] PostgreSQLでは、ロールに対してWITH LOGINを指定しないと、そのロールが接続できないのは常に正しい。"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLにおけるフェイルオーバーとフェイルバックのプロセスに関する次の記述のうち、正しいものはどれか？
+[1] フェイルオーバーが発生すると、すべてのクライアントは新しいプライマリサーバーに自動的に接続される。
+[2] フェイルバックは、元のプライマリサーバーが復旧した後に、再びそのサーバーを主サーバーとして使用する操作を指す。
+[3] フェイルオーバーは、常に手動で介入する必要がある。
+[4] フェイルバックは、データの不整合を引き起こす可能性があるため、必ず事前に全データをバックアップする必要がある。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLにおいて、多言語サポートを利用するために設定すべきパラメータは次のうちどれか？
+[1] lc_monetary
+[2] lc_messages
+[3] lc_time
+[4] data_encoding"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLの多言語サポートに関して正しいものは次のうちどれか？
+[1] PostgreSQLは多言語でのデータ入力をサポートするために、特定の言語のためのカスタムデータ型を必要とする。
+[2] PostgreSQLはすべての言語に対して同じ文字セットを使用する必要がある。
+[3] PostgreSQLは異なる言語でのテキスト検索を行うために、言語ごとの全文検索用のインデックスを作成することができる。
+[4] PostgreSQLでは多言語のサポートを利用するためには、追加のライブラリをインストールする必要がある。"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLにおいて、lc_ctype設定が影響を与えるものは次のうちどれか？
+[1] 日時のフォーマットに関連する設定を行う。
+[2] 文字のソート順や大文字小文字の区別を決定する。
+[3] トランザクションの隔離レベルを指定する。
+[4] ストレージエンジンの種類を選択する。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLでJSONBデータ型を使用してデータをフィルタリングする際に、以下のクエリを実行したところ、予期しない結果が返ってきた。この問題の可能性が高い原因を1つ選びなさい。
+SELECT * FROM my_table WHERE my_jsonb_column ->> 'key' = 'value';
+[1] my_jsonb_columnがNULLの場合、エラーが発生する。
+[2] my_jsonb_columnに'key'が存在しない場合、結果が返ってこない。
+[3] my_jsonb_columnがJSON形式ではない場合、予期しない型変換が行われる。
+[4] my_jsonb_columnが文字列として比較されるため、大小文字の違いを無視することができない。"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLにおけるJSONBデータ型の機能について正しいものは次のうちどれか？
+[1] JSONBデータ型は、ドキュメント内の要素を直接更新する際に、必ず全体を再保存する必要がある。
+[2] JSONBデータ型には、JSON文字列をバイナリ形式で保存するため、ストレージの効率は常に優れている。
+[3] JSONBデータ型は、特定のキーに対して部分的なインデックスを作成できる機能を持っている。
+[4] JSONBデータ型は、ユーザー定義の演算子を利用して、SQL標準に依存しない独自のクエリが可能である。"""
+answer = 3
+
+[[questions]]
+question = """次のSQLクエリにおいて、特定のクエリパフォーマンスを大幅に向上させるためにインデックスを導入する際、最も正しいケースはどれか？
+[1] 更新頻度の高いカラムに対して、単純な等価検索を行う場合。
+[2] 大量のデータを持つテーブルに対し、JOIN句を使用して複数のテーブルからデータを抽出する場合。
+[3] 頻繁に利用される集約関数（SUM, COUNTなど）を使用する場合。
+[4] 特定の範囲を持つ日時カラムに対して、高頻度でフィルタリングを行う場合。"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLでデータベースの正規化を行うことで、データの冗長性が最も削減できるのは次のうちどの段階の正規形か？
+[1] 第一正規形
+[2] 第二正規形
+[3] 第三正規形
+[4] ボイスコッド正規形"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLにおける外部キー制約に関する記述の中で、正しいものは次のどれか？
+[1] 外部キー制約は、参照先のテーブルと同じデータ型を持つ必要がある
+[2] 外部キー制約を持つカラムにはNULL値を許可することができない
+[3] 外部キー制約は、参照先のテーブルのデータが削除された場合、自動的に参照元のデータも削除される
+[4] 外部キー制約により、整合性を保つために不正なデータの挿入を防ぐことができる"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLにおけるCHECK制約（CHECK CONSTRAINT）に関する記述の中で、正しいものは次のどれか？
+[1] CHECK制約は、カラムに対して複数定義することができるが、すべての条件を1つの制約としてまとめることはできない
+[2] CHECK制約は、特定のカラムの値が特定の条件を満たすかどうかを検証するために使用される
+[3] CHECK制約は、外部キー制約と異なり、参照先に依存することなく自由に定義できる
+[4] CHECK制約は、トランザクション内の他の操作に影響を与えることがあり、ロールバックの原因となることがある"""
+answer = 2
+
+[[questions]]
+question = """PostgreSQLにおける一意制約および外部キー制約に関する次の記述のうち、正しいものを1つ選びなさい。
+[1] 一意制約は、NULL値を複数持つことができるカラムに設定できる。
+[2] 外部キー制約が設定されたカラムに対して、親テーブルの主キーが削除されると、対応する子テーブルの行も自動的に削除される。
+[3] 一意制約は、必ず主キー制約と組み合わせて使用する必要がある。
+[4] 外部キー制約が設定された子テーブルに対して、親テーブルに存在しない値を持つ行を挿入することはできない。"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLにおけるログ管理に関して、次の説明のうち誤っているものはどれか？
+[1] log_statement_levelパラメータは、エラーレベルに基づいてSQLステートメントをログに記録するために使用される。
+[2] log_durationパラメータが有効な場合、実行時間が設定された閾値を超えるSQLステートメントの実行時間がログに記録される。
+[3] log_connectionsパラメータを有効にすることで、データベースへの接続情報がログに記録される。
+[4] log_temp_filesパラメータでは、一時ファイルのサイズを指定することで、そのサイズを超えた一時ファイルに関するログが出力される。"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおけるログレベルの設定について、次の説明のうち誤っているものはどれか？
+[1] log_min_error_statementパラメータを設定することで、指定したエラーレベル以上のSQLステートメントがログに記録される
+[2] log_checkpointsパラメータを有効にすると、チェックポイントの情報がログに出力されるようになる
+[3] log_statementはデフォルトで「all」に設定されているため、すべてのSQLステートメントがログに記録される
+[4] log_line_prefixは、ログ出力における各行のフォーマットをカスタマイズするためのパラメータである"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLにおけるログ管理に関する次の記述のうち、正しくないものはどれか？
+[1] log_statement_statsをtrueに設定すると、各SQLの実行に関する統計情報がログに記録される。
+[2] log_durationをtrueに設定した場合、全てのSQL文の実行時間がログに記録されるが、log_min_duration_statementが設定されている場合はその影響を受ける。
+[3] log_line_prefixを設定することで、各ログエントリーに関するメタデータ（例：タイムスタンプなど）を含めることができる。
+[4] log_filenameはSQL文の実行に応じて動的に変更することができ、既存のログファイルに新しい内容を追加することが可能である。"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLにおいてユーザー定義データ型 (UDT) を使用する際の制約や特性について、以下の記述のうち正しいものはどれか？
+[1] UDTの作成時には、コンストラクタ関数を定義し、それを利用してインスタンスを生成する必要がある。
+[2] UDTは、他のUDTを含むことができず、ネストされたUDTを作成することはできない。
+[3] UDTは、定義されたスキーマに依存するため、そのスキーマを参照しない限り使用できない。
+[4] UDTを持つテーブルからデータを抽出する際、UDTの属性は通常の列のように扱われる。"""
+answer = 4
+
+[[questions]]
+question = """PostgreSQLにおけるユーザー定義データ型 (UDT) に関して、次の選択肢のうち、正しくない記述はどれか？
+[1] 複合型（Composite Type）は、ユーザーが任意のフィールド名とデータ型を指定して作成することができる。
+[2] ユーザー定義データ型は、オブジェクト指向の概念を利用して、継承を通じて新しい型を定義することができる。
+[3] ユーザー定義データ型は、テーブルのカラムに対してのみ使用することができる。
+[4] 既存のユーザー定義データ型を直接変更することはできず、新しい型を作成する必要がある。"""
+answer = 3
+
+[[questions]]
+question = """PostgreSQLにおけるクエリ実行時のメモリ使用について、正しいものは次のどれか？
+[1] ワーキングメモリは、各セッションで独立して使用されるが、バッファキャッシュは全セッションで共有される。
+[2] クエリプランナーが使用するメモリの量は、work_memの値に影響されない。
+[3] バッファキャッシュは、VACUUM操作によって削除されたデータも保持することができる。
+[4] JOINの処理においては、work_memの設定を超えてもメモリを使用することはない。"""
+answer = 1
+
+[[questions]]
+question = """PostgreSQLにおけるバッファキャッシュ（shared_buffers）の設定がデータベースのパフォーマンスに与える影響について、正しい説明は次のうちどれか？
+[1] バッファキャッシュのサイズを大きく設定することで、ディスクI/Oを完全に排除し、すべてのデータをメモリ内で処理することができる。
+[2] バッファキャッシュは全ユーザーに共有されるため、設定されたサイズが小さいと複数のクエリがデータを再度ディスクから読み込む必要が出てくる。
+[3] バッファキャッシュのサイズは、自動的にシステムの物理メモリ全体の80%に設定されるため、手動で調整する必要は全くない。
+[4] バッファキャッシュの設定変更は、データベースの再起動が必要であり、頻繁な調整は実行できない。"""
+answer = 2
